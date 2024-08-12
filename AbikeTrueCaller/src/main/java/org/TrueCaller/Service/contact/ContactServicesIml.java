@@ -13,7 +13,7 @@ public class ContactServicesIml implements ContactServices {
     private ContactRepository contactRepository;
 
     @Override
-    public Contact addContact(Contact contact) {
+    public Contact saveContact(Contact contact) {
         Contact newContact = new Contact();
         newContact.setId(contact.getId());
 //        newContact.setName(contact.getName());

@@ -1,13 +1,10 @@
-package org.TrueCaller.data.repository;
-import org.TrueCaller.data.models.User
+package com.badAfeez.code.data.repository;
 
-
+import com.badAfeez.code.data.models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
 public interface UserRepository extends MongoRepository<User, String> {
-
-    User findByUserName(String userName);
-
+    User findByPhoneNumber(String phoneNumber);
 }

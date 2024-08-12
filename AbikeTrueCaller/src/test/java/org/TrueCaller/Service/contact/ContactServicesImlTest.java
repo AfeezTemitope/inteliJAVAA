@@ -18,12 +18,12 @@ class ContactServicesImlTest {
     private ContactRepository contactRepository;
 
     @Test
-    void testThatRepositoryCanAddContact() {
+    void testThatRepositoryCanSaveContact() {
     Contact contact = new Contact();
     contact.setId("qwe");
     contact.setName("Bad boy afeez");
     contact.setPhoneNumber("09014465194");
-    contactServices.addContact(contact);
+    contactServices.saveContact(contact);
     assertEquals(1, contactRepository.count());
     }
 
@@ -33,13 +33,13 @@ class ContactServicesImlTest {
         contact.setId("qwe");
         contact.setName("Bad boy afeez");
         contact.setPhoneNumber("09014465194");
-        contactServices.addContact(contact);
+        contactServices.saveContact(contact);
         //assertEquals(1, contactRepository.count());
         Contact contact2 = new Contact();
         contact2.setId("qwe2");
         contact2.setName("Bad boy afeez");
         contact2.setPhoneNumber("09014465194");
-        contactServices.addContact(contact2);
+        contactServices.saveContact(contact2);
         assertEquals(2, contactRepository.count());
     }
     @Test
@@ -48,7 +48,7 @@ class ContactServicesImlTest {
     contact.setId("qwe");
     contact.setName("Bad boy afeez");
     contact.setPhoneNumber("09014465194");
-    contactServices.addContact(contact);
+    contactServices.saveContact(contact);
     assertEquals(1, contactRepository.count());
     Contact isDeletedContact = contactRepository.findById("qwe").orElseThrow(()->new ContactNotFound("Contact not found"));
     contactRepository.delete(isDeletedContact);
@@ -61,7 +61,7 @@ class ContactServicesImlTest {
         contact.setId("qwe");
         contact.setName("Bad boy afeez");
         contact.setPhoneNumber("09014465194");
-        contactServices.addContact(contact);
+        contactServices.saveContact(contact);
         assertEquals(1, contactRepository.count());
         Contact updatedContact = contactRepository.findById("qwe").orElseThrow(()->new ContactNotFound("Contact not found"));
         updatedContact.setName("chibuzor!!!");
