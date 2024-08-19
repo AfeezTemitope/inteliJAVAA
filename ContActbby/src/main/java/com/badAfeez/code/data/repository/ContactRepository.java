@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ContactRepository extends MongoRepository<Contacts, String> {
-    List<Contacts> findContactsBy(String userId);
-
     Optional<Contacts> findByPhoneNumber(String number);
 
-    boolean existsByPhoneNumber(String phoneNumber);
+    List<Contacts> findByUserId(String userId);
+
+    boolean existsByPhoneNumberAndId(String phoneNumber, String userId);
 }

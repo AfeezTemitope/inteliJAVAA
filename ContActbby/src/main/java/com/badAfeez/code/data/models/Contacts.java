@@ -9,10 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Contacts {
     @Id
-    private String Id;
+    private String id;
     private String name;
     private String phoneNumber;
-
-    @DBRef
+    private String email;
     private String userId;
 }

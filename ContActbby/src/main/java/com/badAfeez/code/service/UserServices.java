@@ -8,6 +8,7 @@ import com.badAfeez.code.DtoBBY.response.LoginResponse;
 
 public interface UserServices {
     Long countNumberOfUser();
+
     CreateUserResponse createUser(CreateUserRequest request);
 
     LoginResponse isUserLoggedIn(LoginUserRequest loginRequest);

@@ -21,7 +21,7 @@ public class UserController {
     @Autowired
     private UserServices userServices;
 
-    @PostMapping
+    @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@RequestBody CreateUserRequest createUserRequest) {
         try {
             CreateUserResponse createUserResponse = userServices.createUser(createUserRequest);
@@ -33,7 +33,7 @@ public class UserController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/userLogin")
     public ResponseEntity<?>loginUser(@RequestBody LoginUserRequest loginUserRequest) {
         try {
             LoginResponse loginResponse = userServices.isUserLoggedIn(loginUserRequest);
