@@ -19,5 +19,11 @@ public class Artist {
     private String phoneNumber;
     private String userName;
     @DBRef
-    private List< ArtWorks> artWorks = new ArrayList<>();
+    private List<ArtWorks> artWorks = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "\"" + id + "\"";
+
+    }
 }

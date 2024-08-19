@@ -10,6 +10,8 @@ import com.badAfeez.code.dtoBby.request.RegisterCustomerRequest;
 import com.badAfeez.code.dtoBby.response.LoginResponse;
 import com.badAfeez.code.dtoBby.response.RegisterCustomerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,4 +51,6 @@ public class CustomerServiceIml implements CustomerService{
         loginResponse.setRole(customer.getUserRole());
         return loginResponse;
     }
+
+
 }

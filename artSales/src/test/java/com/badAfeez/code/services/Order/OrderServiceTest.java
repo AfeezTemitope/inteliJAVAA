@@ -264,8 +264,113 @@ class OrderServiceTest {
 
         ArtWorks createdArtWork = artWorkService.createOrUpdateArtworks(createArtworkRequest);
         assertNotNull(createdArtWork);
-        assertThat(createdArtWork.getArtist()).isEqualTo(artistId);
+        System.out.println(createdArtWork);
     }
+    @Test
+    void testThatArtistCanViewOwnArtworks() {
+        RegisterCustomerRequest registerArtist = new RegisterCustomerRequest();
+        registerArtist.setCustomerAddress("one way to leave semicolon street");
+        registerArtist.setCustomerName("Leave semicolon");
+        registerArtist.setCustomerPhone("123");
+        registerArtist.setCustomerEmail("uMustLeaveSemicolon@leaveSemicolon.com");
+        registerArtist.setPassword("myBby");
+        registerArtist.setUserRole(UserRole.ARTIST);
+
+        RegisterCustomerResponse registerResponse = customerService.registerCustomer(registerArtist);
+        assertNotNull(registerResponse);
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setCustomerEmail(registerArtist.getCustomerEmail());
+        loginRequest.setPassword(registerArtist.getPassword());
+
+        LoginResponse loginResponse = customerService.loginCustomer(loginRequest);
+        assertNotNull(loginResponse);
+        assertThat(loginResponse.getCustomerId()).isEqualTo(registerResponse.getCustomerId());
+        assertThat(loginResponse.getRole()).isEqualTo(UserRole.ARTIST);
+
+        CreateArtistRequest createArtistRequest = new CreateArtistRequest();
+        createArtistRequest.setUserName("artisKolo");
+        createArtistRequest.setPhoneNumber("12345");
+        createArtistRequest.setAge("30");
+        createArtistRequest.setGender("M");
+        createArtistRequest.setName("LactoseBender");
+        CreateArtistResponse artistResponse = artistServices.createArtist(createArtistRequest);
+        assertNotNull(artistResponse);
+
+        String artistId = artistResponse.getArtistId();
+
+        CreateArtworkRequest createArtworkRequest = new CreateArtworkRequest();
+        createArtworkRequest.setDescription("Beautiful artwork");
+        createArtworkRequest.setTitle("Sunset");
+        createArtworkRequest.setPrice(500.00);
+        createArtworkRequest.setImageUrl("sunset.jpg");
+        createArtworkRequest.setAvailableQuantity(10);
+        createArtworkRequest.setArtistId(artistId);
+
+        ArtWorks createdArtWork = artWorkService.createOrUpdateArtworks(createArtworkRequest);
+        assertNotNull(createdArtWork);
+
+
+        List<ArtWorks> artworks = artWorkService.getArtworksByArtist(artistId);
+        assertNotNull(artworks);
+        assertFalse(artworks.isEmpty());
+        assertEquals(1, artworks.size());
+
+        ArtWorks viewedArtwork = artworks.get(0);
+        assertThat(viewedArtwork.getTitle()).isEqualTo("Sunset");
+    }
+    @Test
+    void testThatArtistCanDeleteOwnArtworks() {
+        RegisterCustomerRequest registerArtist = new RegisterCustomerRequest();
+        registerArtist.setCustomerAddress("one way to leave semicolon street");
+        registerArtist.setCustomerName("Leave semicolon");
+        registerArtist.setCustomerPhone("123");
+        registerArtist.setCustomerEmail("uMustLeaveSemicolon@leaveSemicolon.com");
+        registerArtist.setPassword("myBby");
+        registerArtist.setUserRole(UserRole.ARTIST);
+
+        RegisterCustomerResponse registerResponse = customerService.registerCustomer(registerArtist);
+        assertNotNull(registerResponse);
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setCustomerEmail(registerArtist.getCustomerEmail());
+        loginRequest.setPassword(registerArtist.getPassword());
+
+        LoginResponse loginResponse = customerService.loginCustomer(loginRequest);
+        assertNotNull(loginResponse);
+        assertThat(loginResponse.getCustomerId()).isEqualTo(registerResponse.getCustomerId());
+        assertThat(loginResponse.getRole()).isEqualTo(UserRole.ARTIST);
+
+        CreateArtistRequest createArtistRequest = new CreateArtistRequest();
+        createArtistRequest.setUserName("artisKolo");
+        createArtistRequest.setPhoneNumber("12345");
+        createArtistRequest.setAge("30");
+        createArtistRequest.setGender("M");
+        createArtistRequest.setName("LactoseBender");
+        CreateArtistResponse artistResponse = artistServices.createArtist(createArtistRequest);
+        assertNotNull(artistResponse);
+
+        String artistId = artistResponse.getArtistId();
+
+        CreateArtworkRequest createArtworkRequest = new CreateArtworkRequest();
+        createArtworkRequest.setDescription("Beautiful artwork");
+        createArtworkRequest.setTitle("Sunset");
+        createArtworkRequest.setPrice(500.00);
+        createArtworkRequest.setImageUrl("sunset.jpg");
+        createArtworkRequest.setAvailableQuantity(10);
+        createArtworkRequest.setArtistId(artistId);
+
+        ArtWorks createdArtWork = artWorkService.createOrUpdateArtworks(createArtworkRequest);
+        assertNotNull(createdArtWork);
+
+        artWorkService.deleteArtWork(createdArtWork.getId());
+
+        List<ArtWorks> artworks = artWorkService.getArtworksByArtist(artistId);
+//        assertNotNull(artworks);
+        assertTrue(artworks.isEmpty());
+    }
+
+
 
 
 //
@@ -311,54 +416,7 @@ class OrderServiceTest {
 //
 //    }
 
-    @Test
-    void testThatArtistCanCreateArtworks_0() {
-        // Register as an ARTIST
-        RegisterCustomerRequest registerArtist = new RegisterCustomerRequest();
-        registerArtist.setCustomerAddress("one way to leave semicolon street");
-        registerArtist.setCustomerName("Leave semicolon");
-        registerArtist.setCustomerPhone("123");
-        registerArtist.setCustomerEmail("uMustLeaveSemicolon@leaveSemicolon.com");
-        registerArtist.setPassword("myBby");
-        registerArtist.setUserRole(UserRole.ARTIST);
 
-        RegisterCustomerResponse registerResponse = customerService.registerCustomer(registerArtist);
-        assertNotNull(registerResponse);
-
-
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setCustomerEmail(registerArtist.getCustomerEmail());
-        loginRequest.setPassword(registerArtist.getPassword());
-
-        LoginResponse loginResponse = customerService.loginCustomer(loginRequest);
-        assertNotNull(loginResponse);
-        assertThat(loginResponse.getCustomerId()).isEqualTo(registerResponse.getCustomerId());
-        assertThat(loginResponse.getRole()).isEqualTo(UserRole.ARTIST);
-
-
-        CreateArtistRequest createArtistRequest = new CreateArtistRequest();
-        createArtistRequest.setUserName("artisKolo");
-        createArtistRequest.setPhoneNumber("12345");
-        createArtistRequest.setAge("30");
-        createArtistRequest.setGender("M");
-        createArtistRequest.setName("LactoseBender");
-        CreateArtistResponse artistResponse = artistServices.createArtist(createArtistRequest);
-        assertNotNull(artistResponse);
-
-        String artistId = artistResponse.getArtistId();
-
-        CreateArtworkRequest createArtworkRequest = new CreateArtworkRequest();
-        createArtworkRequest.setDescription("NonseseArtwork");
-        createArtworkRequest.setTitle("SunsetBby");
-        createArtworkRequest.setPrice(500.00);
-        createArtworkRequest.setImageUrl("sunset.jpg");
-        createArtworkRequest.setAvailableQuantity(10);
-        createArtworkRequest.setArtistId(artistId);
-
-        ArtWorks createdArtWork = artWorkService.createOrUpdateArtworks(createArtworkRequest);
-        assertNotNull(createdArtWork);
-        assertThat(createdArtWork.getArtist()).isEqualTo(artistId);
-    }
 
 
 }

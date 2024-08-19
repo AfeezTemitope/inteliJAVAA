@@ -22,11 +22,13 @@ public class ArtWorks {
     public String toString() {
         return "ArtWorks{" +
                 "id=" + id +
-                ", title=" + title + '\'' +
-                ", artist=" + artist + '\'' +
-                ", description=" + description '\'' +
-               ", imageUrl=" + imageUrl + '\'' +
+                ", title='" + title + '\'' +
+                ", artist=" + artist.getName() +
+                ", description='" + description + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", price=" + price +
+                ", availableQuantity=" + availableQuantity +
                 '}';
 
-
     }
+}
