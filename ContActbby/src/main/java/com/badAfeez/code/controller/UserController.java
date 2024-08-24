@@ -4,45 +4,46 @@ import com.badAfeez.code.DtoBBY.request.CreateUserRequest;
 import com.badAfeez.code.DtoBBY.request.LoginUserRequest;
 import com.badAfeez.code.DtoBBY.response.CreateUserResponse;
 import com.badAfeez.code.DtoBBY.response.LoginResponse;
-import com.badAfeez.code.data.models.User;
-import com.badAfeez.code.service.UserServices;
+import com.badAfeez.code.DtoBBY.response.UserWithContactsResponse;
+import com.badAfeez.code.Exception.UserNotFound;
+import com.badAfeez.code.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
-    private UserServices userServices;
+    private UserServiceImpl userService;
 
-    @PostMapping("/createUser")
-    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest createUserRequest) {
-        try {
-            CreateUserResponse createUserResponse = userServices.createUser(createUserRequest);
-            return new ResponseEntity<>(createUserResponse, HttpStatus.CREATED);
-        } catch (Exception e){
-            CreateUserResponse createUserResponse = new CreateUserResponse();
-            createUserResponse.setMessage(e.getMessage());
-            return new ResponseEntity<>(createUserResponse, HttpStatus.BAD_REQUEST);
+    @PostMapping("/create")
+    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request) {
+        CreateUserResponse response = userService.createUser(request);
+        if ("User already exists".equals(response.getMessage())) {
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         }
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("/userLogin")
-    public ResponseEntity<?>loginUser(@RequestBody LoginUserRequest loginUserRequest) {
-        try {
-            LoginResponse loginResponse = userServices.isUserLoggedIn(loginUserRequest);
-            return new ResponseEntity<>(loginResponse, HttpStatus.OK);
-        }catch (Exception e){
-            LoginResponse loginResponse = new LoginResponse();
-            loginResponse.setMessage(e.getMessage());
-            return new ResponseEntity<>(loginResponse, HttpStatus.BAD_REQUEST);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginUserRequest request) {
+        LoginResponse response = userService.isUserLoggedIn(request);
+        if ("invalid.CREDENTIALS".equals(response.getMessage())) {
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{phoneNumber}/contacts")
+    public ResponseEntity<?> getUserWithContacts(@PathVariable String phoneNumber) {
+        try {
+            UserWithContactsResponse response = userService.getUserWithContacts(phoneNumber);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (UserNotFound e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

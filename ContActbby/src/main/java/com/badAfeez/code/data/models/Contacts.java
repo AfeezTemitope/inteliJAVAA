@@ -12,6 +12,6 @@ public class Contacts {
     private String id;
     private String name;
     private String phoneNumber;
-    private String email;
-    private String userId;
+    @DBRef
+    private User user;
 }

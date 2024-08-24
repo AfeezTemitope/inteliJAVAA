@@ -16,5 +16,5 @@ public class User {
     private String email;
     private String phoneNumber;
     private String password;
-    private List<String> contactId;
+    private List<Contacts> contacts;
 }

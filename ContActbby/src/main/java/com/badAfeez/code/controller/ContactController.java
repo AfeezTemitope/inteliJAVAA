@@ -3,11 +3,13 @@ package com.badAfeez.code.controller;
 import com.badAfeez.code.DtoBBY.request.CreateContactRequest;
 import com.badAfeez.code.DtoBBY.request.DeleteContactRequest;
 import com.badAfeez.code.DtoBBY.request.UpdateContactRequest;
-import com.badAfeez.code.DtoBBY.response.CreateContactResponse;
 import com.badAfeez.code.DtoBBY.response.DeleteContactResponse;
 import com.badAfeez.code.DtoBBY.response.UpdateContactResponse;
 import com.badAfeez.code.data.models.Contacts;
-import com.badAfeez.code.service.ContactService;
+import com.badAfeez.code.Exception.ContactNotFound;
+import com.badAfeez.code.Exception.InvalidPhoneNumber;
+import com.badAfeez.code.Exception.UserNotFound;
+import com.badAfeez.code.service.ContactServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,92 +22,45 @@ import java.util.List;
 public class ContactController {
 
     @Autowired
-    private ContactService contactService;
+    private ContactServiceImpl contactService;
 
-    @PostMapping("/add")
-    public ResponseEntity<?>  addContact(@RequestBody CreateContactRequest createContactRequest) {
+    @GetMapping
+    public ResponseEntity<List<Contacts>> getAllContacts(@RequestParam String phoneNumber) {
         try {
-            CreateContactResponse createContactResponse = contactService.addContact(createContactRequest);
-            return ResponseEntity.ok(createContactResponse);
-        } catch (Exception e) {
-//            e.printStackTrace();
-            return  new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            List<Contacts> contacts = contactService.getAllContacts(phoneNumber);
+            return new ResponseEntity<>(contacts, HttpStatus.OK);
+        } catch (UserNotFound  e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteContact(@RequestBody DeleteContactRequest deleteContactRequest) {
+    @PostMapping("/create")
+    public ResponseEntity<Contacts> createContact(@RequestBody CreateContactRequest request) {
         try {
-            DeleteContactResponse deleteContactResponse = contactService.deleteContact(deleteContactRequest);
-            return new ResponseEntity<>(deleteContactResponse, HttpStatus.OK);
-    }
-    catch (Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            Contacts contact = contactService.addContact(request);
+            return new ResponseEntity<>(contact, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateContact( @RequestBody UpdateContactRequest updateContactRequest) {
+    public ResponseEntity<UpdateContactResponse> updateContact(@RequestBody UpdateContactRequest request) {
         try {
-            UpdateContactResponse updateContactResponse = contactService.updateContact(updateContactRequest);
-            return new ResponseEntity<>(updateContactResponse, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            UpdateContactResponse response = contactService.updateContact(request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (ContactNotFound  e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
-    @GetMapping("/list/{userId}")
-    public ResponseEntity<?> getUserContacts(@PathVariable String userId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<DeleteContactResponse> deleteContact(@RequestBody DeleteContactRequest request) {
         try {
-            List<Contacts> contacts = contactService.getUserContacts(userId);
-            return new ResponseEntity<>(contacts, HttpStatus.OK);
-        }catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            DeleteContactResponse response = contactService.deleteContact(request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (ContactNotFound  e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
-
-//@RestController
-//@RequestMapping("/contacts")
-//public class ContactController {
-//
-//    @Autowired
-//    private ContactService contactService;
-//
-//    @PostMapping
-//    public ResponseEntity<?> addContact(@RequestBody CreateContactRequest createContactRequest){
-//        try{
-//            CreateContactResponse response = contactService.addContact(createContactRequest);
-//            return new ResponseEntity<>(response, HttpStatus.CREATED);
-//    } catch (Exception e){
-//        CreateContactResponse response = new CreateContactResponse();
-//        response.setMessage(e.getMessage());
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//        }
-//    }
-//
-//    @DeleteMapping
-//    public ResponseEntity<?> deleteContact(@RequestBody DeleteContactRequest deleteContactRequest){
-//        try {
-//            DeleteContactResponse response = contactService.deleteContact(deleteContactRequest);
-//            return new ResponseEntity<>(response, HttpStatus.OK);
-//        }catch (Exception e){
-//            DeleteContactResponse response = new DeleteContactResponse();
-//            response.setMessage(e.getMessage());
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//        }
-//    }
-//    @PutMapping
-//    public ResponseEntity<?> updateContact(@RequestBody UpdateContactRequest updateContactRequest){
-//    try {
-//        UpdateContactResponse response = contactService.updateContact(updateContactRequest);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    } catch (Exception e){
-//        UpdateContactResponse response = new UpdateContactResponse();
-//        response.setMessage(e.getMessage());
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//    }
-//    }
-//
-//}

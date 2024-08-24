@@ -1,6 +1,7 @@
 package com.badAfeez.code.data.repository;
 
 import com.badAfeez.code.data.models.Contacts;
+import com.badAfeez.code.data.models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface ContactRepository extends MongoRepository<Contacts, String> {
     List<Contacts> findByUserId(String userId);
 
     boolean existsByPhoneNumberAndId(String phoneNumber, String userId);
+
+    List<Contacts> findByUser(User user);
 }

@@ -31,10 +31,10 @@ public class ArtWorkController {
         }
     }
 
-    @GetMapping("/browseArtworks")
+    @GetMapping("/browseArtworks/{artistId}")
     public ResponseEntity<?> getArtWoksByArtist(@PathVariable String artistId) {
         try {
-            List<ArtWorks> artWorksList =  artWorkService.getArtworksByArtist(artistId);
+            List<ArtWorks> artWorksList = artWorkService.getArtworksByArtist(artistId);
             if (artWorksList.size() > 0) {
                 return new ResponseEntity<>(artWorksList, HttpStatus.OK);
             }
@@ -44,26 +44,59 @@ public class ArtWorkController {
         }
     }
 
-    @DeleteMapping("/deleteArtwork")
-    public  ResponseEntity<?> deleteArtwork(@PathVariable String artworkId) {
+    @DeleteMapping("/deleteArtwork/{artworkId}")
+    public ResponseEntity<?> deleteArtwork(@PathVariable String artworkId) {
         try {
             artWorkService.deleteArtWork(artworkId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-    @PostMapping("/purchase")
-    public ResponseEntity<?> purchaseArtwork(@RequestBody CreatePurchaseRequest createPurchaseRequest){
-        try {
-            CreatePurchaseResponse createPurchaseResponse = orderService.processedOrder(createPurchaseRequest);
-            if("Order purchase successful".equals(createPurchaseResponse.getMessage())){
-                ArtWorks updateArtworks = artWorkService.createOrUpdateArtworks(createPurchaseRequest);
-                return new ResponseEntity<>(updateArtworks, HttpStatus.CREATED);
-            }
-            return new ResponseEntity<>(createPurchaseResponse.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
+//    @PostMapping("/purchase")
+//    public ResponseEntity<?> purchaseArtwork(@RequestBody CreatePurchaseRequest createPurchaseRequest){
+//        try {
+//            CreatePurchaseResponse createPurchaseResponse = orderService.processedOrder(createPurchaseRequest);
+//            if("Order purchase successful".equals(createPurchaseResponse.getMessage())){
+//                ArtWorks updateArtworks = artWorkService.createOrUpdateArtworks(createPurchaseResponse);
+//                return new ResponseEntity<>(updateArtworks, HttpStatus.CREATED);
+//            }
+//            return new ResponseEntity<>(createPurchaseResponse.getMessage(), HttpStatus.BAD_REQUEST);
+//        } catch (Exception e){
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//}
+//@PostMapping("/purchase")
+//public ResponseEntity<?> purchaseArtwork(@RequestBody CreatePurchaseRequest createPurchaseRequest) {
+//    try {
+//           CreatePurchaseResponse createPurchaseResponse = orderService.processedOrder(createPurchaseRequest);
+//        if ("Order purchase successful".equals(createPurchaseResponse.getMessage())) {
+//            List<ArtWorks> artwork = artWorkService.getArtworksByArtist(createPurchaseRequest.getArtworkId());
+//            if (artwork == null) {
+//                return new ResponseEntity<>("Artwork not found", HttpStatus.NOT_FOUND);
+//            }
+//            int newQuantity = artwork.getLast().getAvailableQuantity() - createPurchaseRequest.getQuantity();
+//            if (newQuantity < 0) {
+//                return new ResponseEntity<>("Insufficient quantity available", HttpStatus.BAD_REQUEST);
+//            }
+//
+////            artwork.set(newQuantity,);
+//            ArtWorks updatedArtWork = artWorkService.createOrUpdateArtworks(
+//                    new CreateArtworkRequest(
+//                            artwork.getId(),
+//                            artwork.getTitle(),
+//                            artwork.getDescription(),
+//                            artwork.getPrice(),
+//                            artwork.getImageUrl(),
+//                            newQuantity,
+//                            artwork.getArtistId()
+//                    )
+//            );
+//            return new ResponseEntity<>(updatedArtWork, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(createPurchaseResponse.getMessage(), HttpStatus.BAD_REQUEST);
+//    } catch (Exception e) {
+//        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
