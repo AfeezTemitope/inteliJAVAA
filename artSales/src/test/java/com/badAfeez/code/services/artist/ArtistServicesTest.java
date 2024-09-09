@@ -30,10 +30,10 @@ class ArtistServicesTest {
     @Autowired
     private ArtWorkService artWorkService;
 
-    @BeforeEach
-    void cleanUP(){
-        artistRepository.deleteAll();
-    }
+//    @BeforeEach
+//    void cleanUP(){
+//        artistRepository.deleteAll();
+//    }
 
     @Test
     void testThatArtistNeedsToBeCreated(){

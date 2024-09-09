@@ -2,6 +2,9 @@ package com.example.demo.data.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -15,6 +18,6 @@ public class Note {
     private String author;
     private LocalDateTime createdAt;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 }

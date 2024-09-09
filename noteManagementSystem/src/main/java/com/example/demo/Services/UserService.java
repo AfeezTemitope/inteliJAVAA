@@ -11,4 +11,6 @@ public interface UserService {
     CreateUserResponse createUser(CreateUserRequest createUser);
 
     User login(String username, String password);
+
+    User getUserByUsername(String username);
 }
